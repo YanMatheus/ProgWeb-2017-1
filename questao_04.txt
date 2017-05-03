@@ -1,0 +1,2 @@
+a) serve para verificar os arquivos que sofreram modificações.
+b) serve para ignorar as alterações feitas.
