@@ -1,2 +1,5 @@
 a) serve para verificar os arquivos que sofreram modificações.
 b) serve para ignorar as alterações feitas.
+
+Nota: 0.5
+Logs não reportados. Definições com problemas.

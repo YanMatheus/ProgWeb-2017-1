@@ -14,3 +14,7 @@ O terceiro erro é que o <span> é usado mas não é fechado com </span> assim t
 
 O quarto erro é que não se mantém um padrão na linha 15 até a 22, usa-se o <span> somente depois de uma parte do texto, onde o certo seria definir o style em <p>
 ficando como <p id="para" style="font-weight:bold" > e removendo o <span> ou somente removendo o <span> para ficar com o mesmo estilo.
+
+Nota: 1.5
+Apenas 3 erros foram reportados corretamente.
+
