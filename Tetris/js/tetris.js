@@ -41,12 +41,14 @@
         createPeca(); //Cria a peça.
         createProximaPecaTable(); //Cria a tabela onde será exibida a próxima peça.
         var botao = document.createElement("button");
-        var botaoTextNode = document.createTextNode("Clique aqui para iniciar")
+        var botaoTextNode = document.createTextNode("GG")
         botao.appendChild(botaoTextNode);
         proximaPeca.appendChild(botao);
         console.log(botao);
-        gameLoop = setInterval(run, 5500 / fps);
+        gameLoop = setInterval(run, 2000 / fps);
     }
+
+
 
     function run() {
         var prox_celula;
@@ -67,15 +69,21 @@
         celula = document.getElementById("celula " + linha + " " + coluna);
         celula.style.backgroundColor = "green";
 
-          if (posicao >= 650) clearInterval(gameLoop);       // **ISTO AQUI SIGNFICA QUANDO A TABELA FICA CHEIA DE PEÇAS E O JOGO DÁ GAMEOVER
+          if (posicao >= 650){
 
+          clearInterval(gameLoop);       // **ISTO AQUI SIGNFICA QUANDO A TABELA FICA CHEIA DE PEÇAS E O JOGO DÁ GAMEOVER
+          alert("fim de jogo");
+        }
     }
 
     function createPeca() {
+
         celula = document.getElementById("celula 0 4");
-        //peca = document.createElement("div");
+
+        peca = document.createElement("div");//
+
         celula.style.backgroundColor = "green";
-        //tabuleiro.appendChild(peca);
+        tabuleiro.appendChild(peca);//
     }
 
     function createTabuleiro() {
@@ -114,14 +122,22 @@
 
     }
 
+    /*function getRand() {
+      return Math.random() * (6 - 0) + 0;
+    }*/
+
     function geraPeca() {
         var i, j, random = Math.floor(Math.random() * 7);
+        var rand = getRand();
 
         for (i = 0; i < 4; i++)
             for (j = 0; j < 4; j++) {
                 td = document.getElementById("proximaPecaTable " + i + " " + j);
                 td.style.backgroundColor = "";
             }
+
+        //  td = document.getElementById("proximaPecaTable " +rand + " " + rand)
+          //td.style.backgroundColor = "";
 
         switch (random) {
             case 0:
@@ -196,6 +212,5 @@
                 break;
         }
     }
-  //  style="background-color: red; border: 1px solid #000 margin: 0px"
     init();
 })();
