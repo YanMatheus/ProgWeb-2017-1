@@ -1,5 +1,4 @@
-
-(function () {
+(function() {
 
     var tabuleiro;
     var peca;
@@ -8,21 +7,21 @@
 
     addEventListener("keydown", function(e) {
         if (e.key == "ArrowRight") {
-            if(!(parseInt(peca.style.left) >= 308))
+            if (!(parseInt(peca.style.left) >= 308))
                 peca.style.left = (parseInt(peca.style.left) + 34) + "px";
         } else if (e.key == "ArrowLeft") {
-            if(!(parseInt(peca.style.left) <= 18))
+            if (!(parseInt(peca.style.left) <= 18))
                 peca.style.left = (parseInt(peca.style.left) - 34) + "px";
         }
     });
 
-    function init () {
+    function init() {
         createTabuleiro();
         createPeca();
-        gameLoop = setInterval(run, 1500/fps);
+        gameLoop = setInterval(run, 1500 / fps);
     }
 
-    function run () {
+    function run() {
         var posicao = parseInt(peca.style.top);
         posicao = posicao + 17;
         if (posicao >= 650) {
@@ -31,7 +30,7 @@
         peca.style.top = posicao + "px";
     }
 
-    function createPeca () {
+    function createPeca() {
         tabuleiro = document.querySelector("#tabuleiro");
         peca = document.createElement("div");
         peca.style.top = "12px";
@@ -39,19 +38,19 @@
         tabuleiro.appendChild(peca);
     }
 
-    function createTabuleiro(){
+    function createTabuleiro() {
         tabuleiro = document.querySelector("#tabuleiro");
         var tabela = document.createElement("table");
         tabela.cellPadding = "15px";
         var i, j;
         var tr, td, texto;
 
-        for(i = 0; i<20; i++){
+        for (i = 0; i < 20; i++) {
             tr = document.createElement("tr");
 
-            for(j = 0; j<10; j++){
+            for (j = 0; j < 10; j++) {
                 td = document.createElement("td");
-                td.id = "celula "+i+" "+j;
+                td.id = "celula " + i + " " + j;
                 texto = document.createTextNode(" ");
                 td.appendChild(texto);
                 tr.appendChild(td);
@@ -60,7 +59,7 @@
         }
 
         tabuleiro.appendChild(tabela)
-        tabela.setAttribute("border","1");
+        tabela.setAttribute("border", "1");
 
     }
 
