@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Instituto de Computação!</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <form name="circulo" class="" action="js2.html" method="post">
+        Informe o raio <input type="text" name="raio" value="0">
+        <input type="button" name="botao" value="OK!"><br> Area do circulo <input type="text" name="area" value="0"><br> Circunferência <input type="text" name="circ" value="0">
+    </form>
+    <script type="text/javascript">
+        document.circulo.botao.onclick = function() {
+            raio = document.circulo.raio.value;
+            document.circulo.area.value = (2 * Math.PI * raio).toFixed(2);
+            document.circulo.circ.value = (Math.PI * Math.pow(raio, 2)).toFixed(2);
+        }
+    </script>
+</body>
+
+</html>

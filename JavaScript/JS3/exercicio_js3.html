@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>js3</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <h1>gráfico de barras</h1>
+    <form name="form" method="post">
+        Informa a altura das barras:
+        <input type="text" name="altura1">
+        <input type="text" name="altura2">
+        <input type="text" name="altura3">
+        <input type="text" name="altura4">
+        <input type="text" name="altura5"><br> Informa a lagura:
+        <input type="text" name="largura"><br>
+        <br>
+        <input type="button" name="botao" value="Desenhe o gráfico"><br>
+        <img id="red1" src="red.gif">
+        <img id="red2" src="red.gif">
+        <img id="red3" src="red.gif">
+        <img id="red4" src="red.gif">
+        <img id="red5" src="red.gif">
+    </form>
+    <script type="text/javascript">
+        botao = document.getElementById("botao");
+        document.form.botao.onclick = function() {
+            document.form.red1.height = (document.form.altura1.value);
+            document.form.red1.width = (document.form.largura.value);
+            document.form.red2.height = (document.form.altura2.value);
+            document.form.red2.width = (document.form.largura.value);
+            document.form.red3.height = (document.form.altura3.value);
+            document.form.red3.width = (document.form.largura.value);
+            document.form.red4.height = (document.form.altura4.value);
+            document.form.red4.width = (document.form.largura.value);
+            document.form.red5.height = (document.form.altura5.value);
+            document.form.red5.width = (document.form.largura.value);
+        }
+    </script>
+</body>
+
+</html>
