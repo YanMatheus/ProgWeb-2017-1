@@ -1,62 +1,66 @@
-#tabuleiro {
-    width: 313px;
-    height: 630px;
-    position: absolute;
-    left: 156px;
-    border: 3px solid #ff3c3c;
-
-
+#tabuleiro table tr td{
+  border: solid 0.1px;
+  width: 40px;
+  height: 40px;
+  border-color: rgb(109, 250, 161);
 }
 
+
 #proxima-peca {
+  float: left;
+}
 
+#proxima-peca table tr td{
+  border: solid 1px;
+  width: 10px;
+  height: 10px;
 
-  position: absolute;
-  width: 102px;
-  height: 102px;
-  top: 10px;
-  left: 520px;
-  border: 3px;
-  background-color: : white;
+  border-color: rgb(109, 250, 161);
 
 }
 
 
 #informacoes {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    left: 720px;
-    top: 60px;
+position : absolute;
+font-style: normal;
+font-size: 15px;
+font-family: monospace;
+width : 60px;
+height : 15px;
+left: 540px;
+background-color: rgb(109, 250, 161);
+border-style : solid;
+border-color : rgb(109, 250, 161);
+border-width : 2px;
+padding : 5px;
+top : 42px;
+}
+
+#informacoes::after{
+
+  content: 'Pontos';
+  position : absolute;
+  font-style: normal;
+  font-family: monospace;
+  width : 60px;
+  height : 15px;
+  left: -2px;
+  background-color: rgb(101, 227, 139);
+  border-style : solid;
+  border-color : rgb(101, 227, 139);
+  border-width : 2px;
+  padding : 5px;
+  top : -30px;
 
 }
 
-#informacoes::before{
-            content: 'Tempo: ';
-            font-family: arial, sans-serif;
-            font-size: 18px;
-            color: rgb(200, 200, 200);
 
-
+.verde{
+  background-color: rgb(109, 250, 161);
 }
+html{
 
-body {
-    background-color: #0f0d17;
-}
-
-table {
-
-}
-
-td {
-    padding: 15px;
-
-}
-
-button {
-    position: absolute;
-    width: 100px;
-    top: 10px;
-    left: 200px;
-
+  background-color: black;
+  border: 3px;
+  border-color: white;
 }
