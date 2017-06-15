@@ -1,0 +1,65 @@
+#tabuleiro table tr td{
+  border: solid 0.1px;
+  width: 40px;
+  height: 40px;
+  border-color: rgb(109, 250, 161);
+}
+
+
+#proxima-peca {
+  float: left;
+}
+
+#proxima-peca table tr td{
+  border: solid 1px;
+  width: 10px;
+  height: 10px;
+
+  border-color: rgb(109, 250, 161);
+
+}
+
+
+#informacoes {
+position : absolute;
+font-style: normal;
+font-size: 15px;
+font-family: monospace;
+width : 60px;
+height : 15px;
+left: 540px;
+background-color: rgb(109, 250, 161);
+border-style : solid;
+border-color : rgb(109, 250, 161);
+border-width : 2px;
+padding : 5px;
+top : 42px;
+}
+
+#informacoes::after{
+
+  content: 'Pontos';
+  position : absolute;
+  font-style: normal;
+  font-family: monospace;
+  width : 60px;
+  height : 15px;
+  left: -2px;
+  background-color: rgb(101, 227, 139);
+  border-style : solid;
+  border-color : rgb(101, 227, 139);
+  border-width : 2px;
+  padding : 5px;
+  top : -30px;
+
+}
+
+.verde{
+  background-color: rgb(109, 250, 161);
+}
+html{
+
+  background-color: black;
+  border: 3px;
+  border-color: white;
+}
