@@ -1,0 +1,76 @@
+
+body {
+  background-color: white;
+  color: black;
+  margin:30px;
+  margin-top: 10px;
+  margin-left: 50px;
+  position: absolute;
+}
+
+h1 {
+  text-align: center;
+  font-family: monospace;
+  font-size: 45px;
+  color: gray;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#tabuleiro  {
+  min-width: 300px;
+  height: 398px;
+  width: 400px;
+}
+
+#menu {
+  height: 398px;
+  width: 500px;
+}
+p {
+  color: gray;
+  font-family: monospace;
+  font-size: 40px;
+}
+
+#pontos {
+  color: red;
+  border: gray;
+  font-size: 50px;
+  width: 150px;
+
+}
+
+#linhas {
+  color: red;
+  border: gray;
+  font-size: 50px;
+  width: 100px;
+}
+
+#tabuleiro table, #proxima-peca table {
+  border: 3.2px solid gray;
+}
+
+
+#tabuleiro td, #proxima-peca td {
+  width: 19.2px;
+  height: 19.2px;
+  border: #F1F8FF;
+  -moz-border-radius: 8px;
+}
+
+ #proxima-peca table {
+  min-width: 100px;
+  float: right;
+  height: 100px;
+  width: 100px;
+  margin-top: -395px;
+}
+
+#informacoes {
+  float:right;
+  width: 112px;
+  margin-top: -305px;
+  text-align: center;
+}
