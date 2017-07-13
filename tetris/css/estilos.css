@@ -1,65 +1,82 @@
-#tabuleiro table tr td{
-  border: solid 0.1px;
-  width: 40px;
-  height: 40px;
-  border-color: rgb(109, 250, 161);
+
+body {
+  background-color:rgb(14, 26, 29);
+
+  margin:30px;
+  margin-top: 10px;
+  margin-left: 50px;
+  position: absolute;
+}
+
+h1 {
+  text-align: center;
+  font-size: 15px;
+  color: rgb(95, 241, 198);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#tabuleiro  {
+  min-width: 300px;
+  height: 398px;
+  width: 400px;
+  background-color: rgb(14, 26, 29);
+}
+
+#menu {
+  height: 398px;
+  width: 500px;
+  background-color: rgb(14, 26, 29);
+}
+p {
+  color: rgb(95, 241, 198);
+  font-size: 15px;
+  background-color: rgb(14, 26, 29);
+}
+
+#pontos {
+  color: rgb(95, 241, 198);
+  border: rgb(95, 241, 198);
+  font-size: 15px;
+  width: 150px;
+  background-color: rgb(14, 26, 29);
+
+}
+
+#linhas {
+  color: rgb(95, 241, 198);
+  border: rgb(95, 241, 198);
+  font-size: 15px;
+  width: 100px;
+  background-color: rgb(14, 26, 29);
+}
+
+#tabuleiro table, #proxima-peca table {
+  border: 3.2px solid rgb(95, 241, 198);
+  background-color: rgb(14, 26, 29);
 }
 
 
-#proxima-peca {
-  float: left;
+#tabuleiro td, #proxima-peca td {
+  width: 19.2px;
+  height: 19.2px;
+  border: rgb(95, 241, 198);
+  -moz-border-radius: 8px;
+  background-color: rgb(14, 26, 29);
 }
 
-#proxima-peca table tr td{
-  border: solid 1px;
-  width: 10px;
-  height: 10px;
-
-  border-color: rgb(109, 250, 161);
-
+ #proxima-peca table {
+  min-width: 100px;
+  float: right;
+  height: 100px;
+  width: 100px;
+  margin-top: -395px;
+  background-color: rgb(14, 26, 29);
 }
-
 
 #informacoes {
-position : absolute;
-font-style: normal;
-font-size: 15px;
-font-family: monospace;
-width : 60px;
-height : 15px;
-left: 540px;
-background-color: rgb(109, 250, 161);
-border-style : solid;
-border-color : rgb(109, 250, 161);
-border-width : 2px;
-padding : 5px;
-top : 42px;
-}
-
-#informacoes::after{
-
-  content: 'Pontos';
-  position : absolute;
-  font-style: normal;
-  font-family: monospace;
-  width : 60px;
-  height : 15px;
-  left: -2px;
-  background-color: rgb(101, 227, 139);
-  border-style : solid;
-  border-color : rgb(101, 227, 139);
-  border-width : 2px;
-  padding : 5px;
-  top : -30px;
-
-}
-
-.verde{
-  background-color: rgb(109, 250, 161);
-}
-html{
-
-  background-color: black;
-  border: 3px;
-  border-color: white;
+  float:right;
+  width: 112px;
+  margin-top: -305px;
+  text-align: center;
 }
