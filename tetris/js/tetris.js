@@ -919,7 +919,7 @@
 
   function createScore(pontos, linha) {
     pontuacao = document.querySelector("#informacoes");
-    var txtScore = document.createTextNode("Points");
+    var txtScore = document.createTextNode("XP");
     pScore = document.createElement("p");
     pScore.appendChild(txtScore);
     pScore.setAttribute("id", "pScore");
@@ -930,7 +930,7 @@
     pQtdScore.appendChild(qtdScore);
     pQtdScore.setAttribute("id", "pQtdScore");
 
-    var txtLinhas = document.createTextNode("Lines");
+    var txtLinhas = document.createTextNode("Level");
     pLinhas = document.createElement("p");
     pLinhas.appendChild(txtLinhas);
     pLinhas.setAttribute("id", "pLinhas");

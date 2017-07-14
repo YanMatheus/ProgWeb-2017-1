@@ -1,32 +1,41 @@
 #tabuleiro {
   position: absolute;
   top: 50px;
-  left: 500px;
+  left: 730px;
   background-color: rgb(44, 49, 57);
 }
 
 #proxima-peca {
   position: absolute;
-  top: 50px;
-  left: 250px;
+  top: 25px;
+  left: 50px;
 }
 
 #informacoes {
-  width: 150px;
+  width: 100px;
   height: 150px;
-  border: 5px solid #9a7b60;
-  border-color: rgb(84, 235, 158);
   position: absolute;
-  top: 50px;
-  left: 950px;
+  top: 665px;
+  left: 200px;
   background-color: rgb(44, 49, 57);
+  box-shadow: 2px 2px 2px 2px black;
 
 }
 
 #tabelaProxPeca {
   background-color: rgb(52, 51, 54);
   width: 150px;
-  height: 150px;
+  height: 75px;
+}
+#pScore {
+  color: rgb(84, 235, 158);
+  font-weight: bold;
+
+}
+
+#pLinhas {
+  color: rgb(84, 235, 158);
+  font-weight: bold;
 }
 
 table {
@@ -37,8 +46,8 @@ table {
 }
 
 td {
-  width: 20px;
-  height: 20px;
+  width:  30px;
+  height: 30px;
 }
 
 div {
@@ -48,19 +57,11 @@ div {
 
 p {
   text-align: center;
-  font-family: verdana, sans-serif;
+  font-family: monospace;
   font-size: 16px;
 }
 
-#pScore {
-  color: rgb(84, 235, 158);
-  font-weight: bold;
-}
 
-#pLinhas {
-  color: rgb(84, 235, 158);
-  font-weight: bold;
-}
 
 body {
 background-image: url(hud.jpg);
