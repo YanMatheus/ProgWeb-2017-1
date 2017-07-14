@@ -1,82 +1,67 @@
-
-body {
-  background-color:rgb(14, 26, 29);
-
-  margin:30px;
-  margin-top: 10px;
-  margin-left: 50px;
+#tabuleiro {
   position: absolute;
+  top: 50px;
+  left: 500px;
+  background-color: rgb(44, 49, 57);
 }
 
-h1 {
-  text-align: center;
-  font-size: 15px;
-  color: rgb(95, 241, 198);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#tabuleiro  {
-  min-width: 300px;
-  height: 398px;
-  width: 400px;
-  background-color: rgb(14, 26, 29);
-}
-
-#menu {
-  height: 398px;
-  width: 500px;
-  background-color: rgb(14, 26, 29);
-}
-p {
-  color: rgb(95, 241, 198);
-  font-size: 15px;
-  background-color: rgb(14, 26, 29);
-}
-
-#pontos {
-  color: rgb(95, 241, 198);
-  border: rgb(95, 241, 198);
-  font-size: 15px;
-  width: 150px;
-  background-color: rgb(14, 26, 29);
-
-}
-
-#linhas {
-  color: rgb(95, 241, 198);
-  border: rgb(95, 241, 198);
-  font-size: 15px;
-  width: 100px;
-  background-color: rgb(14, 26, 29);
-}
-
-#tabuleiro table, #proxima-peca table {
-  border: 3.2px solid rgb(95, 241, 198);
-  background-color: rgb(14, 26, 29);
-}
-
-
-#tabuleiro td, #proxima-peca td {
-  width: 19.2px;
-  height: 19.2px;
-  border: rgb(95, 241, 198);
-  -moz-border-radius: 8px;
-  background-color: rgb(14, 26, 29);
-}
-
- #proxima-peca table {
-  min-width: 100px;
-  float: right;
-  height: 100px;
-  width: 100px;
-  margin-top: -395px;
-  background-color: rgb(14, 26, 29);
+#proxima-peca {
+  position: absolute;
+  top: 50px;
+  left: 250px;
 }
 
 #informacoes {
-  float:right;
-  width: 112px;
-  margin-top: -305px;
+  width: 150px;
+  height: 150px;
+  border: 5px solid #9a7b60;
+  border-color: rgb(84, 235, 158);
+  position: absolute;
+  top: 50px;
+  left: 950px;
+  background-color: rgb(44, 49, 57);
+
+}
+
+#tabelaProxPeca {
+  background-color: rgb(52, 51, 54);
+  width: 150px;
+  height: 150px;
+}
+
+table {
+  background-color: rgb(44, 49, 57);
+  border: 5px solid #9a7b60;
+  border-color: rgb(84, 235, 158);
+
+}
+
+td {
+  width: 20px;
+  height: 20px;
+}
+
+div {
+  margin-right: 50px;
+  margin-left: 30px;
+}
+
+p {
   text-align: center;
+  font-family: verdana, sans-serif;
+  font-size: 16px;
+}
+
+#pScore {
+  color: rgb(84, 235, 158);
+  font-weight: bold;
+}
+
+#pLinhas {
+  color: rgb(84, 235, 158);
+  font-weight: bold;
+}
+
+body {
+background-image: url(hud.jpg);
 }

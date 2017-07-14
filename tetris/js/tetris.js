@@ -1,539 +1,982 @@
-(function () {
+(function() {
 
-     var gameLoop;
-     var cont  = 0;
-     var atual  = geraLetraAleatoria();
-     var coluna = String(geraColunaAleatoria());
-     var somador = 0;
-     var contPosicoes = 0;
-     var vetPosicoesOcupadas = [];
-     var fps = 5;
-
-     function criarMenu(){
-       var menu = document.createElement("div");
-       var body = document.body;
-       menu.setAttribute("id", "menu");
-       body.appendChild(menu);
-     }
-
-     function criarTabela() {
-       var tabuleiro = document.getElementById("tabuleiro");
-       var tabela = tabuleiro.appendChild(document.createElement("table"));
-       tabela.setAttribute("id", "tabela");
-       menu.appendChild(tabuleiro);
-       for (var i = 1; i <= 18; i++) {
-         var row =  tabela.appendChild(document.createElement("tr"));
-         for (var j = 1; j <= 10; j++) {
-           var td = document.createElement("td");
-           td.setAttribute("id",""+i+""+""+j+"");
-           row.appendChild(td);
-           td.style.backgroundColor = "rgb(14, 26, 29)";
-         }
-       }
-     }
-
-     function criarTabelaProximaPeca() {
-       var next = document.getElementById("proxima-peca");
-       var smallTable = next.appendChild(document.createElement("table"));
-       smallTable.setAttribute("id","proxima");
-       menu.appendChild(next);
-       for (var i = 0; i < 4; i++) {
-         var row = smallTable.appendChild(document.createElement("tr"));
-         for (var j = 0; j < 4; j++) {
-           var td = document.createElement("td");
-           td.style.backgroundColor = "rgb(14, 26, 29)";
-           row.appendChild(td);
-           }
-         }
-       }
-
-     function criarInformacoes() {
-       var info = document.getElementById("informacoes");
-       menu.appendChild(info);
-       var pontuacao = info.appendChild(document.createElement("p"));
-       var texto = document.createTextNode("Seus pontos");
-       pontuacao.appendChild(texto);
-
-       var visor = document.createElement("input");
-       visor.setAttribute("id", "pontos");
-       visor.setAttribute("type", "text");
-       visor.setAttribute("value", "0000");
-       pontuacao.appendChild(visor);
-
-       var linhasVisor = document.createElement("input");
-       linhasVisor.setAttribute("id", "linhas");
-       linhasVisor.setAttribute("type","text");
-       linhasVisor.setAttribute("value", "00");
-
-       var pLinha = info.appendChild(document.createElement("p"));
-       var textoLinha = document.createTextNode("Linhas feitas");
-       pLinha.appendChild(textoLinha);
-       pLinha.appendChild(linhasVisor);
-     }
-
-     function criarTitulo() {
-       var h1 = document.createElement("h1");
-       var texto = document.createTextNode("");
-       h1.appendChild(texto);
-       menu.appendChild(h1);
-     }
-
-     function init() {
-       criarMenu();
-       criarTitulo();
-       criarTabela();
-       criarTabelaProximaPeca();
-       criarInformacoes();
-       gameLoop = setInterval(run, 2000/fps);
-     }
-
-     function geraColunaAleatoria() {
-        var _numero = Math.floor((Math.random() * 8) + 2);
-        return _numero;
-     }
-
-     function geraPecas(proxima) {
-           if (proxima == "i"){
-             var i = { bloco: "2345", color: 'cyan'  };
-             return i;
-           }
-           if (proxima == "j"){
-             var j = { bloco: "2344", color: 'blue' };
-             return j;
-           }
-           if (proxima == "l"){
-             var l = { bloco: "2344", color: 'orange' };
-             return l;
-           }
-           if (proxima == "o"){
-             var o = { bloco: "2323", color: 'yellow' };
-             return o;
-           }
-           if (proxima == "s"){
-             var s = { bloco: "2223", color: 'green'  };
-             return s;
-           }
-           if (proxima == "t"){
-             var t = { bloco: "2223", color: 'purple' };
-             return t;
-           }
-           if (proxima == "z"){
-             var t = { bloco: "2233", color: 'rgb(241, 94, 61)' };
-             return t;
-         }
-     }
-
-     function geraBlocos(pos,coluna,cor){
-     var vetLinhas = ["1234","1233","1233","1212","2233","2223"];
-     var vetColunas = ["2222", "3332", "2223", "2233","2312","1232","2334"];
-
-     for (var i = 0; i < 4; i++) {
-         linha = String(vetLinhas[pos].charAt(i));
-         coluna = String(vetColunas[pos].charAt(i));
-         var peca = document.querySelector("#proxima tr:nth-child("+ linha +") td:nth-child("+ coluna +")");
-         peca.style.backgroundColor = cor;
-       }
-     }
-
-     function geraProximaPeca(proxima){
-         switch (proxima) {
-           case 'i':
-             geraBlocos(0,0,"cyan");
-           break;
-             case 'j':
-             geraBlocos(1,1,"blue");
-           break;
-             case 'l':
-             geraBlocos(2,2,"orange");
-           break;
-             case 'o':
-             geraBlocos(3,3,"yellow");
-           break;
-             case 's':
-             geraBlocos(4,3,"green");
-             break;
-             case 't':
-             geraBlocos(5,4,"purple");
-             break;
-             case 'z':
-             geraBlocos(4,5,"rgb(241, 94, 61)");
-             break;
-         default:
-       }
-       return proxima;
-     }
+  var tabuleiro;
+  var tabelaTabuleiro;
+  var proximaPeca;
+  var tabelaProxPeca;
+  var pieceofsheet;
+  var hor = 0;
+  var posLeft = 0;
+  var fps = 3;
+  var gameLoop;
+  var PiecePos = [];
+  var numLinhas = 0;
+  var next;
+  var linhas = 20;
+  var col = 15;
+  var dir = 0;
+  var pScore;
+  var pQtdScore;
+  var pLinhas;
+  var pQtdLinhas;
 
 
- function limpaTabela(linha, coluna){
- linha--;
- for (var c = 0; c < 18; c++) {
-     for (var l = 0; l < 10; l++) {
-       if (!(l == linha && c == coluna)){
-           var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+coluna+")");
-           peca.style.backgroundColor = "rgb(14, 26, 29)";
-         }
-       }
-   }
- }
+  var i = {
+    blk: [
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [3, 0]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [0, 3]
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [3, 0]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [0, 3]
+      ],
+    ],
+    cor: 'rgb(252, 235, 117)',
+    bases: [
+      [
+        [3, 0]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [0, 3]
+      ],
+      [
+        [3, 0]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [0, 3]
+      ],
+    ],
+    pontasEsq: [
+      [
+        [0, 0],
+        [3, 0],
+        [1, 0],
+        [2, 0]
+      ],
+      [
+        [0, 0]
+      ],
+      [
+        [0, 0],
+        [3, 0],
+        [1, 0],
+        [2, 0]
+      ],
+      [
+        [0, 0]
+      ]
+    ],
+    rightbord: [
+      [
+        [0, 0],
+        [3, 0],
+        [1, 0],
+        [2, 0]
+      ],
+      [
+        [0, 3]
+      ],
+      [
+        [0, 0],
+        [3, 0],
+        [1, 0],
+        [2, 0]
+      ],
+      [
+        [0, 3]
+      ]
+    ]
+  };
+  var o = {
+    blk: [
+      [
+        [0, 0],
+        [0, 1],
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [1, 0],
+        [1, 1]
+      ]
+    ],
+    cor: 'rgb(249, 103, 98)',
+    bases: [
+      [
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [1, 0],
+        [1, 1]
+      ]
+    ],
+    pontasEsq: [
+      [
+        [1, 0],
+        [0, 0]
+      ],
+      [
+        [1, 0],
+        [0, 0]
+      ],
+      [
+        [1, 0],
+        [0, 0]
+      ],
+      [
+        [1, 0],
+        [0, 0]
+      ]
+    ],
+    rightbord: [
+      [
+        [1, 1],
+        [0, 1]
+      ],
+      [
+        [1, 1],
+        [0, 1]
+      ],
+      [
+        [1, 1],
+        [0, 1]
+      ],
+      [
+        [1, 1],
+        [0, 1]
+      ]
+    ]
+  };
+  var t = {
+    blk: [
+      [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [1, 1]
+      ],
+      [
+        [1, 0],
+        [0, 1],
+        [1, 1],
+        [2, 1]
+      ],
+      [
+        [1, 0],
+        [1, 1],
+        [1, 2],
+        [0, 1]
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [1, 1]
+      ],
+    ],
+    cor: 'rgb(173, 129, 255)',
+    bases: [
+      [
+        [0, 0],
+        [1, 1],
+        [0, 2]
+      ],
+      [
+        [1, 0],
+        [2, 1]
+      ],
+      [
+        [1, 0],
+        [1, 1],
+        [1, 2]
+      ],
+      [
+        [2, 0],
+        [1, 1]
+      ]
+    ],
+    pontasEsq: [
+      [
+        [0, 0],
+        [1, 1]
+      ],
+      [
+        [1, 0],
+        [2, 1]
+      ],
+      [
+        [1, 0]
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0]
+      ]
+    ],
+    rightbord: [
+      [
+        [0, 2],
+        [1, 1]
+      ],
+      [
+        [0, 1],
+        [1, 1],
+        [2, 1]
+      ],
+      [
+        [1, 2]
+      ],
+      [
+        [1, 1],
+        [2, 0]
+      ]
+    ]
+  };
+  var j = {
+    blk: [
+      [
+        [0, 1],
+        [1, 1],
+        [2, 1],
+        [2, 0]
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [1, 1],
+        [1, 2]
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [0, 1]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [1, 2]
+      ],
+    ],
+    cor: 'rgb(147, 244, 244)',
+    bases: [
+      [
+        [2, 0],
+        [2, 1]
+      ],
+      [
+        [1, 0],
+        [1, 1],
+        [1, 2]
+      ],
+      [
+        [2, 0],
+        [0, 1]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [1, 2]
+      ]
+    ],
+    pontasEsq: [
+      [
+        [2, 0],
+        [0, 1]
+      ],
+      [
+        [0, 0],
+        [0, 1]
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0]
+      ],
+      [
+        [0, 0],
+        [1, 2],
+        [0, 1]
+      ]
+    ],
+    rightbord: [
+      [
+        [0, 1],
+        [1, 1],
+        [2, 1]
+      ],
+      [
+        [1, 2],
+        [0, 1]
+      ],
+      [
+        [0, 1],
+        [2, 0]
+      ],
+      [
+        [1, 2],
+        [0, 2]
+      ]
+    ]
+  };
+  var l = {
+    blk: [
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [1, 0]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [1, 1],
+        [2, 1]
+      ],
+      [
+        [1, 0],
+        [1, 1],
+        [1, 2],
+        [0, 2]
+      ]
+    ],
+    cor: 'rgb(93, 232, 183)',
+    bases: [
+      [
+        [2, 0],
+        [2, 1]
+      ],
+      [
+        [1, 0],
+        [0, 2],
+        [0, 1]
+      ],
+      [
+        [0, 0],
+        [2, 1]
+      ],
+      [
+        [1, 0],
+        [1, 1],
+        [1, 2]
+      ]
+    ],
+    pontasEsq: [
+      [
+        [2, 0],
+        [1, 0],
+        [0, 0]
+      ],
+      [
+        [1, 0],
+        [0, 0]
+      ],
+      [
+        [0, 0],
+        [2, 1],
+        [1, 1]
+      ],
+      [
+        [1, 0],
+        [0, 2]
+      ]
+    ],
+    rightbord: [
+      [
+        [2, 1],
+        [0, 0]
+      ],
+      [
+        [0, 2],
+        [1, 0]
+      ],
+      [
+        [2, 1],
+        [1, 1],
+        [0, 1]
+      ],
+      [
+        [0, 2],
+        [1, 2]
+      ]
+    ]
+  };
+  var s = {
+    blk: [
+      [
+        [0, 1],
+        [0, 2],
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [1, 1],
+        [2, 1]
+      ],
+      [
+        [0, 1],
+        [0, 2],
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [1, 1],
+        [2, 1]
+      ]
+    ],
+    cor: 'rgb(247, 242, 111)',
+    bases: [
+      [
+        [0, 2],
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [1, 0],
+        [2, 1]
+      ],
+      [
+        [0, 2],
+        [1, 0],
+        [1, 1]
+      ],
+      [
+        [1, 0],
+        [2, 1]
+      ]
+    ],
+    pontasEsq: [
+      [
+        [1, 0]
+      ],
+      [
+        [1, 0],
+        [0, 0],
+        [2, 1]
+      ],
+      [
+        [1, 0]
+      ],
+      [
+        [1, 0],
+        [0, 0],
+        [2, 1]
+      ]
+    ],
+    rightbord: [
+      [
+        [0, 2],
+        [1, 2]
+      ],
+      [
+        [2, 1],
+        [1, 1]
+      ],
+      [
+        [0, 2],
+        [1, 2]
+      ],
+      [
+        [2, 1],
+        [1, 1]
+      ]
+    ]
+  };
+  var z = {
+    blk: [
+      [
+        [0, 0],
+        [0, 1],
+        [1, 1],
+        [1, 2]
+      ],
+      [
+        [1, 0],
+        [2, 0],
+        [0, 1],
+        [1, 1]
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [1, 1],
+        [1, 2]
+      ],
+      [
+        [1, 0],
+        [2, 0],
+        [0, 1],
+        [1, 1]
+      ]
+    ],
+    cor: 'rgb(96, 126, 215)',
+    bases: [
+      [
+        [0, 0],
+        [1, 1],
+        [1, 2]
+      ],
+      [
+        [2, 0],
+        [1, 1]
+      ],
+      [
+        [0, 0],
+        [1, 1],
+        [1, 2]
+      ],
+      [
+        [2, 0],
+        [1, 1]
+      ]
+    ],
+    pontasEsq: [
+      [
+        [0, 0],
+        [1, 1]
+      ],
+      [
+        [2, 0],
+        [1, 0]
+      ],
+      [
+        [0, 0],
+        [1, 1]
+      ],
+      [
+        [2, 0],
+        [1, 0]
+      ]
+    ],
+    rightbord: [
+      [
+        [1, 2]
+      ],
+      [
+        [1, 1],
+        [0, 1],
+        [2, 0]
+      ],
+      [
+        [1, 2]
+      ],
+      [
+        [1, 1],
+        [0, 1],
+        [2, 0]
+      ]
+    ]
+  };
 
- function verificaLimite(linha) {
-   for (var coluna = 1; coluna <= 10; coluna++) {
-   var td = document.getElementById(""+linha+""+""+coluna+"");
-         if (td.style.backgroundColor != "rgb(14, 26, 29)"){
-             return true;
-           }
-         }
-       return false;
- }
+  var pieces = [i, o, t, j, l, s, z];
 
- function verificaLinha(linha) {
-   for (var coluna = 1; coluna <= 10; coluna++) {
-   var td = document.getElementById(""+linha+""+""+coluna+"");
-         if (td.style.backgroundColor == "rgb(14, 26, 29)"){
-             return false;
-           }
-         }
-       return true;
- }
+  function init() {
+    pieceofsheet = selectnext();
+    createScore(0, 0);
+    createTable();
+    createNextPc();
+    gameLoop = setInterval(run, 460/ fps);
+  }
 
-
- function verificaPosicao(linha, coluna) {
-   var td = document.getElementById(""+linha+""+""+coluna+"");
-     if (td.style.backgroundColor == "rgb(14, 26, 29)"){
-       return 1;
-     }
-     return 0;
- }
-
- function verificaTabela(linha, coluna) {
-   var id = ""+linha+""+""+coluna+"";
-   for (var l = 1; l <= 18; l++) {
-     for (var c = 1; c <= 10; c++) {
-       var td = document.getElementById(""+l+""+""+c+"");
-       if (td.style.backgroundColor != "rgb(14, 26, 29)"){
-         vetPosicoesOcupadas[contPosicoes] = ""+l+""+""+c+"";
-         contPosicoes++;
-       }
-     }
-   }
-     for (var i = 0; i < vetPosicoesOcupadas.length; i++) {
-      if (vetPosicoesOcupadas[i] == id){
-        return 0;
+  addEventListener("keydown", function(e) {
+    if (e.key == "ArrowLeft") {
+      if (posLeft > 0 && !leftCell())
+        posLeft = posLeft - 1;
+    } else if (e.key == "ArrowRight") {
+      if (posr(pieceofsheet) + posLeft < col - 1 && !rightCell())
+        posLeft = posLeft + 1;
+    } else if (e.key == "Enter") {
+      clearInterval(gameLoop);
+    } else if (e.key == "ArrowUp") {
+      if (!starteditall()) {
+        dir = dir + 1;
+        if (dir == 4)
+          dir = 0;
       }
-     }
-     return 1;
- }
+    } else if (e.key == "ArrowDown") {
+      if (hor < linhas - 5 && allowdwn())
+        hor = hor + 1;
+    }
+  });
 
-   function apagaTudo(linha, coluna){
-     for (var l = 1; l <= 18; l++) {
-       for (var c = 1; c <= 10; c++) {
-          if (c == coluna && l == linha){
-           var peca = document.querySelector ("#tabela tr:nth-child("+ String(l) +") td:nth-child("+String(c)+")");
-           peca.style.backgroundColor = "rgb(14, 26, 29)";
-          }
-         }
-     }
-   }
+  function run() {
+    var fit = false;
+    var undercell = false;
 
-  function limpa() {
-    for (var l = 1; l <= 4; l++) {
-         for (var c = 1; c <= 4; c++) {
-           var bloco = document.querySelector("#proxima tr:nth-child("+ String(l) +") td:nth-child("+String(c)+")");
-           bloco.style.backgroundColor = "rgb(14, 26, 29)";
-         }
-       }
+    if (ocpcell() && hor == 0) {
+      clearInterval(gameLoop);
+      window.alert("☠☠☠☠☠☠☠☠☠ YOU DIED ☠☠☠☠☠☠☠☠");
+    } else {
+      hor = hor + 1;
+
+      if (hor + linedwn(pieceofsheet) == linhas - 1 || ocpcell()) {
+        attScore(10, 0);
+        fit = true;
+        addTablePc();
+        pieceofsheet = next;
+        showpreview();
+        hor = 0;
+        posLeft = 0;
+        dir = 0;
+      }
+
+      attTab();
+      if (fit) {
+        lineck();
+      }
+    }
+  }
+
+  function addTablePc() {
+    pieceofsheet.blk[dir].forEach(function(coords) {
+      PiecePos.push([coords[0] + hor, coords[1] + posLeft, pieceofsheet.cor]);
+    });
+  }
+
+  function starteditall() {
+    var nextposs = 0;
+    var go = false;
+    if (dir == 4)
+      nextposs = 0;
+    else nextposs = nextposs + 1;
+
+    pieceofsheet.blk[nextposs].forEach(function(coords) {
+      if (coords[1] + posLeft >= col)
+        go = true;
+    });
+
+    return go;
+  }
+
+  function posr(peca) {
+    var bgdir = -1;
+    peca.blk[dir].forEach(function(coords) {
+      if (coords[0] > bgdir) {
+        bgdir = coords[1];
+      }
+    });
+    return bgdir;
+  }
+
+  function posicaoEsquerda(peca) {
+    var smllef = 100;
+    peca.blk[dir].forEach(function(coords) {
+      if (coords[1] < smllef) {
+        smllef = coords[1];
+      }
+    });
+    return smllef;
+  }
+
+  function createTable() {
+    tabuleiro = document.querySelector("#tabuleiro");
+    tabelaTabuleiro = document.createElement("table");
+    tabelaTabuleiro.setAttribute("id", "tabelaTabuleiro");
+    var tabody = document.createElement('tbody');
+    for (var i = 0; i < linhas; i++) {
+      var tr = document.createElement('tr');
+      for (var j = 0; j < col; j++) {
+        var td = document.createElement("td");
+        tr.appendChild(td);
+      }
+      tabody.appendChild(tr);
+    }
+    tabelaTabuleiro.appendChild(tabody);
+    tabuleiro.appendChild(tabelaTabuleiro);
+    antpcs();
+    drawpctab(pieceofsheet);
+  }
+
+  function antpcs() {
+    PiecePos.forEach(function(coords) {
+      tabelaTabuleiro.rows[coords[0]].cells[coords[1]].style.backgroundColor = coords[2];
+    });
+  }
+
+  function attTab() {
+    tabuleiro.removeChild(tabelaTabuleiro);
+    createTable();
+  }
+
+  function ocpcell() {
+    var hasdown = false;
+    pieceofsheet.bases[dir].forEach(function(coords) {
+      PiecePos.forEach(function(c2) {
+        if (coords[0] + hor + 1 == c2[0] && coords[1] + posLeft == c2[1])
+          hasdown = true;
+      });
+    });
+
+    return hasdown;
+  }
+
+  function allowdwn() {
+    var hasdown = true;
+    pieceofsheet.bases[dir].forEach(function(coords) {
+      PiecePos.forEach(function(c2) {
+        if (coords[0] + hor + 3 >= c2[0] && coords[1] + posLeft == c2[1])
+          hasdown = false;
+      });
+    });
+
+    return hasdown;
+  }
+
+  function rightCell() {
+    var hasright = false;
+    pieceofsheet.rightbord[dir].forEach(function(coords) {
+      PiecePos.forEach(function(c2) {
+        if (coords[0] + hor == c2[0] && coords[1] + posLeft + 1 == c2[1] ||
+          coords[0] + hor + 1 == c2[0] && coords[1] + posLeft + 1 == c2[1]
+        )
+          hasright = true;
+      });
+    });
+
+    return hasright;
+  }
+
+  function leftCell() {
+    var hasleft = false;
+    pieceofsheet.pontasEsq[dir].forEach(function(coords) {
+      PiecePos.forEach(function(c2) {
+        if (coords[0] + hor == c2[0] && coords[1] + posLeft - 1 == c2[1] ||
+          coords[0] + hor + 1 == c2[0] && coords[1] + posLeft - 1 == c2[1])
+          hasleft = true;
+      });
+    });
+
+    return hasleft;
+  }
+
+  function drawcell(celula) {
+    if (celula.style.backgroundColor == "rgb(252, 235, 117)" || celula.style.backgroundColor == "rgb(249, 103, 98)" ||
+      celula.style.backgroundColor == "rgb(173, 129, 255)" || celula.style.backgroundColor == "rgb(93, 232, 183)" ||
+      celula.style.backgroundColor == "rgb(247, 242, 111)" || celula.style.backgroundColor == "rgb(147, 244, 244)" ||
+      celula.style.backgroundColor == "rgb(96, 126, 215)") {
+      return true;
+    } else return false;
+  }
+
+  function linedwn(peca) {
+    var maior = 0;
+    peca.blk[dir].forEach(function(coords) {
+      if (coords[0] > maior)
+        maior = coords[0];
+    });
+    return maior;
+  }
+
+  function lineck() {
+    var clearedlines = [];
+    for (var i = linhas - 1; i >= 0; i--) {
+      ncolors = 0;
+      var coloridos = [];
+      for (var j = 0; j < col; j++) {
+        if (drawcell(tabelaTabuleiro.rows[i].cells[j])) {
+          coloridos.push([i, j]);
+          ncolors++;
+        }
+      }
+      if (ncolors == col) {
+        clearedlines.push(i);
+        numLinhas++;
+      }
+    }
+    clearedlines.sort(function(a, b) {
+      return a - b
+    });
+    for (var i = 0; i < clearedlines.length; i++) {
+      linedelete(clearedlines[i]);
+      attScore(80, 1);
+    }
+  }
+
+
+  function linedelete(linhaAp) {
+    for (var i = 0; i < col; i++) {
+      tabelaTabuleiro.rows[linhaAp].cells[i].style.removeProperty("background-color");
     }
 
-    function verificaParada(ultimaPos, coluna){
-    if (ultimaPos+1 != 19){
-    var verificaPosUm = verificaPosicao(ultimaPos+1,coluna);
-    if (verificaPosUm == 0){
-      return 18;
-     }
-    }
-    return ultimaPos;
-}
 
- function geraLetraAleatoria() {
-     var pecas = ["i","j","l","o","s","t","z"];
-     var random = Math.floor((Math.random() * 7) + 0);
-     var letra = pecas[random];
-     return letra;
- }
+    mtpcs = []
+    for (var j = 0; j < PiecePos.length; j++) {
 
- addEventListener("keydown", function(e) {
-     if (e.key == "ArrowRight") {
-     var vet = [];
-     if (coluna+1 <= 10){
-       var ultimaLinha =  formaPeca(atual, vet, somador, coluna++);
-       var blocos = getPosicoesPeca(v);
-       for (var i = 0; i < blocos.length; i++) {
-         apagaTudo(blocos[i].lin,blocos[i].col);
-         }
-       }
-     } else if (e.key == "ArrowLeft") {
-       if (coluna-1 >= 1){
-       var vet = [];
-       var ultimaLinha =  formaPeca(atual, vet, somador, coluna--);
-       var blocos = getPosicoesPeca(v);
-       for (var i = 0; i < blocos.length; i++) {
-         apagaTudo(blocos[i].lin,blocos[i].col);
-         }
-       }
-     }
-     else if (e.key == "ArrowDown") {
-       if (somador < 18){
-         var vet = [];
-         var ultimaLinha =  formaPeca(atual, vet, somador, coluna);
-         apagaTudo(ultimaLinha);
-       }
-     }
- });
-
- var v;
-
-   function formaPeca(atual, vetBlocos, somador, coluna) {
-       v = [];
-       var qtdPecas = 0;
-       var blocoIdx = 0;
-       for (var i = 0; i < 4; i++) {
-         var letra = geraPecas(atual);
-         var linha = parseInt(letra.bloco.charAt(i)) + somador;
-         if (letra.color == 'cyan'){
-             qtdPecas = 1;
-             var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ coluna +")");
-             peca.style.backgroundColor = "cyan";
-             var pos = {lin:linha, col:parseInt(coluna)};
-             vetBlocos.push(pos);
-             ultimaPos = linha;
-             v.push(pos);
-         }
-         if (letra.color == 'blue'){
-           qtdPecas = 2;
-           if (i == 3){
-             var colunaEsp = parseInt(coluna) - 1;
-             var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(colunaEsp)};
-             vetBlocos.push(pos);
-             v.push(pos);
-           } else if (i == 0){
-             var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(coluna)};
-             vetBlocos.push(pos);
-             v.push(pos);
-           }
-           var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-           peca.style.backgroundColor = letra.color;
-           var pos = {lin:linha, col:parseInt(coluna)};
-           v.push(pos);
-           ultimaPos = linha;
-         }
-         if (letra.color == 'orange'){
-           qtdPecas = 2;
-           if (i == 3){
-             var colunaEsp = parseInt(coluna) + 1;
-             var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(colunaEsp)};
-             vetBlocos.push(pos);
-             v.push(pos);
-           } else if (i == 0){
-             var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(coluna)};
-             vetBlocos.push(pos);
-             v.push(pos);
-           }
-             var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-             peca.style.backgroundColor = letra.color;
-             ultimaPos = linha;
-             var pos = {lin:linha, col:parseInt(coluna)};
-             v.push(pos);
-         }
-         if (letra.color == 'yellow' ){
-           qtdPecas = 2;
-           if (i == 3){
-             var colunaEsp = parseInt(coluna) - 1;
-             var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(colunaEsp)};
-             vetBlocos.push(pos);
-             v.push(pos);
-           } else if (i == 2){
-             var colunaEsp = parseInt(coluna) - 1;
-             var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(colunaEsp)};
-             vetBlocos.push(pos);
-             v.push(pos);
-           } else if (i == 0){
-             var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(coluna)};
-             vetBlocos.push(pos);
-             v.push(pos);
-           }
-             var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-             peca.style.backgroundColor = letra.color;
-             ultimaPos = linha;
-             var pos = {lin:linha, col:parseInt(coluna)};
-             v.push(pos);
-         }
-        if (letra.color == 'purple' ){
-         qtdPecas = 3;
-         if (i == 1){
-             var colunaEsp = parseInt(coluna) - 1;
-             var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(colunaEsp)};
-             vetBlocos.push(pos);
-           v.push(pos);
-         } else if (i == 2) {
-             var colunaEsp = parseInt(coluna) + 1;
-             var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(colunaEsp)};
-             vetBlocos.push(pos);
-             v.push(pos);
-         }
-         else  if (i == 0) {
-             var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(coluna)};
-             vetBlocos.push(pos);
-             v.push(pos);
-         }
-           var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna)  +")");
-           peca.style.backgroundColor = letra.color;
-           var pos = {lin:linha, col:parseInt(coluna)};
-           v.push(pos);
-           ultimaPos = linha;
-       }
-       if (letra.color == 'rgb(241, 94, 61)' ){
-        qtdPecas = 3;
-        if (i == 1){
-            var colunaEsp = parseInt(coluna) - 1;
-            var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-            peca.style.backgroundColor = letra.color;
-            var pos = {lin:linha, col:parseInt(colunaEsp)};
-            vetBlocos.push(pos);
-            v.push(pos);
-        } else if (i == 2) {
-            var colunaEsp = parseInt(coluna) + 1;
-            var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-            peca.style.backgroundColor = letra.color;
-            var pos = {lin:linha, col:parseInt(colunaEsp)};
-            vetBlocos.push(pos);
-            v.push(pos);
-        }
-        else  if (i == 0) {
-            var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-            peca.style.backgroundColor = letra.color;
-            var pos = {lin:linha, col:parseInt(coluna)};
-            vetBlocos.push(pos);
-            v.push(pos);
-        }
-            var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna)  +")");
-            peca.style.backgroundColor = letra.color;
-            ultimaPos = linha;
-            var pos = {lin:linha, col:parseInt(coluna)};
-            v.push(pos);
+      if (PiecePos[j][0] != linhaAp) {
+        if (PiecePos[j][0] < linhaAp) {
+          mtpcs.push([PiecePos[j][0] + 1, PiecePos[j][1], PiecePos[j][2]]);
+        } else mtpcs.push([PiecePos[j][0], PiecePos[j][1], PiecePos[j][2]]);
       }
-     if (letra.color == 'green' ){
-       qtdPecas = 3;
-       if (i == 3){
-             var colunaEsp = parseInt(coluna) - 1;
-             var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-             peca.style.backgroundColor = letra.color;
-             var pos = {lin:linha, col:parseInt(colunaEsp)};
-             vetBlocos.push(pos);
-             v.push(pos);
-       } else if (i == 2){
-           var colunaEsp = parseInt(coluna) + 1;
-           var peca = document.querySelector("#tabela tr:nth-child("+linha+") td:nth-child("+String(colunaEsp)+")");
-           peca.style.backgroundColor = letra.color;
-           var pos = {lin:linha, col:parseInt(colunaEsp)};
-           vetBlocos.push(pos);
-           v.push(pos);
-       } else if (i == 0){
-           var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-           peca.style.backgroundColor = letra.color;
-           var pos = {lin:linha, col:parseInt(coluna)};
-           vetBlocos.push(pos);
-           v.push(pos);
-       }
-           var peca = document.querySelector("#tabela tr:nth-child("+ linha +") td:nth-child("+ String(coluna) +")");
-           peca.style.backgroundColor = letra.color;
-           ultimaPos = linha;
-           var pos = {lin:linha, col:parseInt(coluna)};
-           v.push(pos);
-         }
-   }
-   getPosicoesPeca(v);
+    }
+    PiecePos = mtpcs;
+  }
 
-   for (var i = 0; i < qtdPecas; i++) {
-     limpaTabela(vetBlocos[i].lin, vetBlocos[i].col);
-   }
+  function letirrain(i, j) {
+    if (drawcell(tabelaTabuleiro.rows[i + 1].cells[j])) {
+      return false;
+    } else return true;
+  }
 
-   ultimaPos = verificaParada(ultimaPos,parseInt(coluna));
-   return ultimaPos;
- }
- function getPosicoesPeca(v) {
-     return v;
- }
+  function createNextPc() {
+    proximaPeca = document.querySelector("#proxima-peca");
+    tabelaProxPeca = document.createElement("table");
+    tabelaProxPeca.setAttribute("id", "tabelaProxPeca");
+    var tabody = document.createElement('tbody');
+    for (var i = 0; i < 5; i++) {
+      var tr = document.createElement('tr');
+      for (var j = 0; j < 5; j++) {
+        var td = document.createElement("td");
+        tr.appendChild(td);
+      }
+      tabody.appendChild(tr);
+    }
+    tabelaProxPeca.appendChild(tabody);
+    proximaPeca.appendChild(tabelaProxPeca);
+    next = selectnext();
+    drawpc(next);
+  }
 
-function reset() {
-  somador = 0;
-  limpa();
-  atual  = prox;
-  verifica = false;
-  prox = geraProximaPeca(geraLetraAleatoria());
-  coluna = geraColunaAleatoria();
-}
+  function selectnext() {
+    var x = Math.floor((Math.random() * pieces.length));
+    var newpiece = pieces[x];
+    return newpiece;
+  }
 
- var valor = 0;
- var valorLinhas = 0;
+  function showpreview() {
+    proximaPeca.removeChild(tabelaProxPeca);
+    createNextPc();
+  }
 
- var prox = geraLetraAleatoria();
-    function run () {
-         geraProximaPeca(prox);
+  function drawpc(peca) {
+    peca.blk[0].forEach(function(coords) {
+      tabelaProxPeca.rows[coords[0] + 1].cells[coords[1] + 1].style.backgroundColor = peca.cor;
+    });
+  }
 
-         var vetBlocos=[];
+  function drawpctab(peca) {
+    peca.blk[dir].forEach(function(coords) {
+      tabelaTabuleiro.rows[coords[0] + hor].cells[coords[1] + posLeft].style.backgroundColor = peca.cor;
+    });
+  }
 
-         var indice = formaPeca(atual, vetBlocos, somador++, coluna);
 
-         if (indice == 18){
-           /* Closure */
-           function somaPontos(nova) {
-             return function (antigo) {
-               nova = nova + antigo;
-               return nova;
-             };
-           }
-           var soma1 = somaPontos(valorLinhas);
-           var soma10 = somaPontos(valor);
-           var soma100 = somaPontos(valor);
-           var verifica  = verificaLinha(indice);
-           if (verifica == true){
-               document.getElementById('pontos').value = soma100(100);
-               document.getElementById('linhas').value = soma1(1);
-               valor = valor + 100;
-               valorLinhas = valorLinhas + 1;
-           }else{
-               document.getElementById('pontos').value = soma10(10);
-               valor = valor + 10;
-           }
-           reset();
-           var limite = verificaLimite(2);
-           if (limite == true){
-             window.clearInterval(gameLoop);
-             alert('YOU DIED');
-             init();
-           }
-         }
-         return indice;
-       }
-   init();
- })();
+  function createScore(pontos, linha) {
+    pontuacao = document.querySelector("#informacoes");
+    var txtScore = document.createTextNode("Points");
+    pScore = document.createElement("p");
+    pScore.appendChild(txtScore);
+    pScore.setAttribute("id", "pScore");
+
+    var qtdPontos = newpiece(pontos);
+    var qtdScore = document.createTextNode(qtdPontos);
+    pQtdScore = document.createElement("p");
+    pQtdScore.appendChild(qtdScore);
+    pQtdScore.setAttribute("id", "pQtdScore");
+
+    var txtLinhas = document.createTextNode("Lines");
+    pLinhas = document.createElement("p");
+    pLinhas.appendChild(txtLinhas);
+    pLinhas.setAttribute("id", "pLinhas");
+
+    var novaQtdLinhas = novaLinha(linha);
+    var qtdLinhas = document.createTextNode(novaQtdLinhas);
+    pQtdLinhas = document.createElement("p");
+    pQtdLinhas.appendChild(qtdLinhas);
+    pQtdLinhas.setAttribute("id", "pQtdLinhas");
+
+    pontuacao.appendChild(pScore);
+    pontuacao.appendChild(pQtdScore);
+    pontuacao.appendChild(pLinhas);
+    pontuacao.appendChild(pQtdLinhas);
+  }
+
+
+  function attScore(pontos, linha) {
+    pontuacao.removeChild(pScore);
+    pontuacao.removeChild(pQtdScore);
+    pontuacao.removeChild(pLinhas);
+    pontuacao.removeChild(pQtdLinhas);
+    createScore(pontos, linha);
+  }
+
+  /* closure */
+  function addlines() {
+    var linhas = 0;
+    return function(y) {
+      linhas = linhas + y;
+      return linhas;
+    }
+  }
+
+  var novaLinha = addlines();
+
+  /* closure */
+  function checkpoint() {
+    var valor = 0;
+    return function(y) {
+      valor = valor + y;
+      return valor;
+    }
+  }
+
+  var newpiece = checkpoint();
+  alert('⚔⚔⚔⚔⚔ ☠☠ TETRIS SOULS ☠☠ ⚔⚔⚔⚔');
+  init();
+})();
